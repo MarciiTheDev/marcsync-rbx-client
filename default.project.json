@@ -4,7 +4,7 @@
     "$className": "DataModel",
 
     "ServerScriptService": {
-      "MarcSync": {
+      "MarcSync-feature/SetupManager": {
         "$path": "src/MarcSync"
       }
     }
