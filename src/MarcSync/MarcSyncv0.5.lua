@@ -56,16 +56,16 @@ end
 local marcsync = {}
 marcsync.__index = marcsync
 marcsync.request = {}
-function marcsync.new(token: string)
+function marcsync.new(token: string):typeof(marcsync)
 	if not token then warn("Token not provided while creating a new MarcSync Object.") end
 	if not tokens[token] then warn("Token provided for creating a new MarcSync Object not Found in Token Table, using it as token instead.") else token = tokens[token] end
 	local self = setmetatable({}, marcsync)
 	self._token = token
 	self.request._parent = self
 	self.request.version._parent = self.request
-	self.request.database._parent = self.request
 	self.request.collection._parent = self.request
 	self.utils._parent = self
+	self.events = require(script.Parent.Objects.SubscriptionManager)._new(token)
 	return self
 end
 
@@ -160,25 +160,7 @@ function marcsync.request.collection:get(collectionName: string):typeof(require(
 	if not collectionName then error("No CollectionName Provided") end
 	return require(script.Parent.Objects.Collection)._new(collectionName, self._parent._parent._token)
 end
-marcsync.request.database = {}
-function marcsync.request.database:fetch(databaseId: number):DefaultResult
-	if typeof(self) ~= "table" then error("Please use : instead of .") end
-	if not self._parent then error("[MarcSync] Please set a Token before using MarcSync.") end
-	self._parent._parent:_checkInstallation()
-	if not databaseId then error("No DatabaseId Provided") end
-	local result;
-	local success, Error = pcall(function() result = HttpService:RequestAsync({Url = "https://api.marcthedev.it/marcsync/v0/database/"..databaseId, Headers = {["Authorization"]=self._parent._parent._token}}) end)
-	return self._parent._parent:_requestHandler(result, Error)
-end
-function marcsync.request.database:delete(databaseId: number):DefaultResult
-	if typeof(self) ~= "table" then error("Please use : instead of .") end
-	if not self._parent then error("[MarcSync] Please set a Token before using MarcSync.") end
-	self._parent._parent:_checkInstallation()
-	if not databaseId then error("No DatabaseId Provided") end
-	local result;
-	local success, Error = pcall(function() result = HttpService:RequestAsync({Url = "https://api.marcthedev.it/marcsync/v0/database/"..databaseId, Headers = {["Authorization"]=self._parent._parent._token}}) end)
-	return self._parent._parent:_requestHandler(result, Error)
-end
+marcsync.events = require(script.Parent.Objects.SubscriptionManager)
 marcsync.utils = {}
 function marcsync.utils.safeRequest(method: Function, arguments: {})
 	--_checkInstallation()
