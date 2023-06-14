@@ -1,0 +1,12 @@
+{
+  "name": "client",
+  "tree": {
+    "$className": "DataModel",
+
+    "ServerScriptService": {
+      "MarcSync": {
+        "$path": "src/MarcSync"
+      }
+    }
+  }
+}
