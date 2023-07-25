@@ -1,109 +1,76 @@
 local Utils = require(script.Parent.Parent.Utils)
 local Entry = require(script.Parent.Entry)
 
-local collection = {}
-collection.__index = collection
-
-local filterSheme = {
-	["values"]=typeof({ ["key"]=... }),
-	["startsWith"]=typeof({ "key" }),
-	["ignoreCases"]=typeof({ "key" })
+local types = {
+	EntryData = require(script.Parent.Parent.Types.EntryData).getType()
 }
 
-function collection:insert(data:{key:any}):typeof(Entry)?
-	if typeof(self) ~= "table" then error("Please use : instead of .") end
+local Collection = {}
+
+Collection.createEntry = function(self:typeof(Collection), data:typeof(types.EntryData)):typeof(Entry.new())
 	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
-	local result = nil;
-	Utils.handleResponse(Utils.makeHTTPRequest("POST", "https://api.marcsync.dev/v0/entries/"..self._collectionName, {["data"]=data}, self._token)).onResult:Connect(function(any)
-		if any["success"] and any["objectId"] then
-			data["_id"] = any["objectId"]
-			result = require(script.Parent.Entry)._new(self._collectionName, data, self._token)
-			return
+	local result = Utils.makeHTTPRequest("entry", "POST", "https://api.marcsync.dev/v0/entries/"..self._collectionName, {["data"]=data}, self._accessToken);
+	
+	if result["success"] and result["objectId"] then
+		data["_id"] = result["objectId"]
+		result = require(script.Parent.Entry).new(self._collectionName, data, self._accessToken)
+	else
+		error(result["errorMessage"])
+	end
+
+	return result
+end
+
+Collection.updateEntries = function(self:typeof(Collection), filters:typeof(types.EntryData), data:typeof(types.EntryData)):number
+	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
+	local result = 	Utils.makeHTTPRequest("entry", "PUT", "https://api.marcsync.dev/v0/entries/"..self._collectionName, {["filters"]=filters,["data"]=data}, self._accessToken);
+	if not result["success"] then error(result["errorMessage"]) end
+
+	return result["modifiedEntries"]
+end
+
+Collection.getEntries = function(self:typeof(Collection), filters:typeof(types.EntryData)):{[number]:typeof(Entry.new())}
+	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
+	if not filters then filters = {} end
+	local result = Utils.makeHTTPRequest("entry", "DELETE", "https://api.marcsync.dev/v0/entries/"..self._collectionName.."?isQuery=true", {["filters"]=filters}, self._accessToken);
+	if result["success"] and result["entries"] then
+		local _result = {}
+		for index,entry in pairs(result["entries"]) do
+			_result[index] = require(script.Parent.Entry).new(self._collectionName, entry, self._accessToken)
 		end
-		result = any
-	end)
-	repeat
-		wait()
-	until result ~= nil
+		result = _result
+	else
+		error(result["errorMessage"])
+	end
+
 	return result
 end
 
-function collection:update(filters:typeof(filterSheme),data:{key:any}):{message:string?,errorMessage:string?,success:boolean,modifiedEntries:number?}
-	if typeof(self) ~= "table" then error("Please use : instead of .") end
+Collection.deleteEntries = function(self:typeof(Collection), filters:typeof(types.EntryData)):number
 	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
-	local result = nil;
-	if not filters.values then error("[MarcSync: Collection] Invalid arguments given for collection:select(). Expected filters.values, got nil") end
-	filters.values["_startsWith"] = filters.startsWith or {}
-	filters.values["_ignoreCases"] = filters.ignoreCases or {}
-	Utils.handleResponse(Utils.makeHTTPRequest("PUT", "https://api.marcsync.dev/v1/entries/"..self._collectionName, {["filters"]=filters.values,["data"]=data}, self._token)).onResult:Connect(function(any)
-		result = any
-	end)
-	repeat
-		wait()
-	until result ~= nil
-	return result
+	local result = Utils.makeHTTPRequest("DELETE", "https://api.marcsync.dev/v0/entries/"..self._collectionName, {["filters"]=filters}, self._accessToken);
+	if not result["success"] then error(result["errorMessage"]) end
+
+	return result["deletedEntries"]
 end
 
-function collection:select(filters:typeof(filterSheme),limit:number):{entries:{a:typeof(Entry)?,b:typeof(Entry)?,c:typeof(Entry)?}?,success:boolean,message:string?,errorMessage:string?}
-	if typeof(self) ~= "table" then error("Please use : instead of .") end
+Collection.drop = function(self:typeof(Collection))
 	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
-	local result = nil;
-	if not filters.values then error("[MarcSync: Collection] Invalid arguments given for collection:select(). Expected filters.values, got nil") end
-	filters.values["_startsWith"] = filters.startsWith or {}
-	filters.values["_ignoreCases"] = filters.ignoreCases or {}
-	Utils.handleResponse(Utils.makeHTTPRequest("PATCH", "https://api.marcsync.dev/v1/entries/"..self._collectionName.."?methodOverwrite=GET", {["filters"]=filters.values, ["limit"]=limit}, self._token)).onResult:Connect(function(any)
-		if any["success"] and any["entries"] then
-			local _result = {["entries"]={},["success"]=true}
-			for index,entry in pairs(any["entries"]) do
-				_result["entries"][index] = require(script.Parent.Entry)._new(self._collectionName, entry, self._token)
-			end
-			result = _result
-			return
-		end
-		result = any
-	end)
-	repeat
-		wait()
-	until result ~= nil
-	return result
+	local result = Utils.makeHTTPRequest("collection", "DELETE", "https://api.marcsync.dev/v0/collection/"..self._collectionName, {}, self._accessToken);
+	if not result["success"] then error(result["errorMessage"]) end
+	self = nil
 end
 
-function collection:delete(filters:typeof(filterSheme)):{message:string?,errorMessage:string?,success:boolean,deletedEntries:number?}
-	if typeof(self) ~= "table" then error("Please use : instead of .") end
-	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
-	local result = nil;
-	if not filters.values then error("[MarcSync: Collection] Invalid arguments given for collection:select(). Expected filters.values, got nil") end
-	filters.values["_startsWith"] = filters.startsWith or {}
-	filters.values["_ignoreCases"] = filters.ignoreCases or {}
-	Utils.handleResponse(Utils.makeHTTPRequest("DELETE", "https://api.marcsync.dev/v1/entries/"..self._collectionName, {["filters"]=filters.values}, self._token)).onResult:Connect(function(any)
-		result = any
-	end)
-	repeat
-		wait()
-	until result ~= nil
-	return result
-end
+return {
+	new = function(collectionName: string, accessToken: string):typeof(Collection)
+		local self = {}
+		self._collectionName = collectionName
+		self._accessToken = accessToken
 
-function collection:drop():{success:boolean,message:string?,errorMessage:string?}
-	if typeof(self) ~= "table" then error("Please use : instead of .") end
-	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
-	local result = nil;
-	Utils.handleResponse(Utils.makeHTTPRequest("DELETE", "https://api.marcsync.dev/v0/collection/"..self._collectionName, {}, self._token)).onResult:Connect(function(any)
-		result = any
-	end)
-	repeat
-		wait()
-	until result ~= nil
-	return result
-end
+		self = setmetatable(self, {
+			__index = Collection
+		})
 
-collection._collectionName = nil
-
-function collection._new(_collectionName: string, _token: string):typeof(collection)
-	local self = setmetatable({}, collection)
-	self._collectionName = _collectionName
-	self._token = _token
-	return self
-end
-
-return collection
+		return self
+	end
+}

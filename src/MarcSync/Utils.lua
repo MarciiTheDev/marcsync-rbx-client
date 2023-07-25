@@ -1,64 +1,60 @@
+local AuthorizationError = require(script.Parent.Errors.Authorization)
+local CollectionError = require(script.Parent.Errors.Collection)
+local EntryError = require(script.Parent.Errors.Entry)
+
 local HttpService = game:GetService("HttpService")
 
-function errorHandler(RBXSignal: {}, result: any)
+function errorHandler(type: string, resultBody: any, resultObject: {})
 	local Error;
-	if typeof(result) == typeof({}) and result["message"] then
-		Error = result["message"]
-	elseif typeof(result) == typeof("") then
-		Error = result
+	if typeof(resultBody) == typeof({}) and resultBody["message"] then
+		Error = resultBody["message"]
+	elseif typeof(resultBody) == typeof("") then
+		Error = resultBody
 	else
 		Error = "An Unexpected Error occoured."
 	end
-	spawn(function()
-		RBXSignal:_Fire({
-			["success"] = false,
-			["errorMessage"] = Error
-		})
-	end)
-	return {["onResult"] = RBXSignal}
+
+	if type == "collection" then
+		if resultObject["StatusCode"] == 401 then
+			Error = AuthorizationError.InvalidAccessToken("InvalidAccessToken")
+		elseif resultObject["StatusCode"] == 404 then
+			Error = CollectionError.CollectionNotFound("CollectionNotFound")
+		elseif resultObject["StatusCode"] == 400 then
+			Error = CollectionError.CollectionAlreadyExists("CollectionAlreadyExists")
+		end
+	elseif type == "entry" then
+		if resultObject["StatusCode"] == 401 then
+			Error = AuthorizationError.InvalidAccessToken("InvalidAccessToken")
+		elseif resultObject["StatusCode"] == 404 then
+			Error = CollectionError.CollectionNotFound("CollectionNotFound")
+		elseif resultObject["StatusCode"] == 400 then
+			Error = EntryError.InvalidEntryData("InvalidEntryData")
+		end
+	end
+
+	return {["success"] = false, ["errorMessage"] = Error}
 end
 
 local utils = {}
-function utils._signal()
-	local RBXSignal = {}
-	RBXSignal._bindableEvent = Instance.new("BindableEvent")
-	function RBXSignal:_Fire(...)
-		RBXSignal._bindableEvent:Fire(...)
-	end
-	function RBXSignal:Connect(handler: ({success: boolean, result: {}}) -> ({success: boolean, result: {}}))
-		if typeof(self) ~= "table" then error("Please use : instead of .") end
-		if not (type(handler) == "function") then
-			error(("connect(%s)"):format(typeof(handler)), 2)
-		end
-		RBXSignal._bindableEvent.Event:Connect(function(...)
-			handler(...)
-		end)
-	end
-	return RBXSignal
-end
-function utils.handleResponse(result: any, error: boolean, signal: RBXScriptSignal?)
-	if error then return result end
-	spawn(function()
-		signal:_Fire(result)
-	end)
-	return {["onResult"] = signal}
-end
 
-function utils.makeHTTPRequest(method: string, url: string, body: {}, authorization: string):{["success"]: boolean, ["message"]: string}
-	local result;
+function utils.makeHTTPRequest(type: string, method: string, url: string, body: {}, authorization: string):{["success"]: boolean, ["message"]: string}
+	local resultObj;
+	local resultBody;
 	local success = pcall(function()
 		if body then body = HttpService:JSONEncode(body) end
 		if (method == "GET" or method == "HEAD") then
-			result = HttpService:JSONDecode(HttpService:RequestAsync({Method=method, Url=url, Headers={["Authorization"]=authorization,["Content-Type"]="application/json"}})["Body"])
+			resultObj = HttpService:RequestAsync({Method=method, Url=url, Headers={["Authorization"]=authorization,["Content-Type"]="application/json"}})
+			resultBody = HttpService:JSONDecode(resultObj["Body"])
 		else
-			result = HttpService:JSONDecode(HttpService:RequestAsync({Method=method, Url=url, Headers={["Authorization"]=authorization,["Content-Type"]="application/json"}, Body=body})["Body"])
+			resultObj = HttpService:RequestAsync({Method=method, Url=url, Headers={["Authorization"]=authorization,["Content-Type"]="application/json"}, Body=body})
+			resultBody = HttpService:JSONDecode(resultObj["Body"])
 		end
 	end)
-	if success and result and result["success"] then
-		if result["warning"] then warn('[MarcSync HTTPRequest Handler] MarcSync HTTP Request returned warning for URL "'..url..'" with body: "'..HttpService:JSONEncode(body)..'": '..result["warning"]) end
-		return result, false, utils._signal()
+	if success and resultBody and resultBody["success"] then
+		if resultBody["warning"] then warn('[MarcSync HTTPRequest Handler] MarcSync HTTP Request returned warning for URL "'..url..'" with body: "'..HttpService:JSONEncode(body)..'": '..resultBody["warning"]) end
+		return resultBody
 	end
-	return errorHandler(utils._signal(), result), true
+	return errorHandler(type, resultBody, resultObj)
 end
 
 return utils
