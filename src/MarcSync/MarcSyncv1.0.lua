@@ -8,12 +8,12 @@ local tokens = {
 local Utils = require(script.Parent.Utils)
 local MarcSyncClient = {}
 
-MarcSyncClient.getVersion = function(self:typeof(MarcSyncClient), clientId: number?):{["success"]:boolean,["version"]:string,["update_server"]:string}
+MarcSyncClient.getVersion = function(self:typeof(MarcSyncClient), clientId: number?):string
 	self:_checkInstallation()
 	local url = ""
 	if clientId then url = "/"..clientId end
 	local result = Utils.makeHTTPRequest("GET", "https://api.marcsync.dev/v0/utils/version"..url);
-	return result
+	return result["version"]
 end
 
 MarcSyncClient.createCollection = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Collection).new())
