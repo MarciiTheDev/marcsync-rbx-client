@@ -1,4 +1,3 @@
-local HttpService = game:GetService("HttpService")
 local Utils = require(script.Parent.Parent.Utils)
 local Entry = require(script.Parent.Entry)
 
@@ -59,8 +58,7 @@ Collection.drop = function(self:typeof(Collection))
 	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
 	local result = Utils.makeHTTPRequest("collection", "DELETE", "https://api.marcsync.dev/v0/collection/"..self._collectionName, {}, self._accessToken);
 	if not result["success"] then error(result["errorMessage"]) end
-	self._collectionName = nil
-	self._accessToken = nil
+	self = nil
 end
 
 return {

@@ -22,15 +22,13 @@ function errorHandler(type: string, resultBody: any, resultObject: {})
 		elseif resultObject["StatusCode"] == 400 then
 			Error = CollectionError.CollectionAlreadyExists("CollectionAlreadyExists")
 		end
-	elseif type == "entry" or type == "entryId" then
+	elseif type == "entry" then
 		if resultObject["StatusCode"] == 401 then
 			Error = AuthorizationError.InvalidAccessToken("InvalidAccessToken")
 		elseif resultObject["StatusCode"] == 404 then
 			Error = CollectionError.CollectionNotFound("CollectionNotFound")
 		elseif resultObject["StatusCode"] == 400 then
 			Error = EntryError.InvalidEntryData("InvalidEntryData")
-		elseif type == "entryId" and ((resultBody["modifiedEntries"] and resultBody["modifiedEntries"] == 0) or (resultBody["deletedEntries"] and resultBody["deletedEntries"] == 0)) then
-			Error = EntryError.EntryNotFound("EntryNotFound")
 		end
 	end
 
@@ -53,7 +51,6 @@ function utils.makeHTTPRequest(type: string, method: string, url: string, body: 
 		end
 	end)
 	if success and resultBody and resultBody["success"] then
-		if type == "entryId" and ((resultBody["modifiedEntries"] and resultBody["modifiedEntries"] == 0) or (resultBody["deletedEntries"] and resultBody["deletedEntries"] == 0)) then return errorHandler(type, resultBody, resultObj) end
 		if resultBody["warning"] then warn('[MarcSync HTTPRequest Handler] MarcSync HTTP Request returned warning for URL "'..url..'" with body: "'..HttpService:JSONEncode(body)..'": '..resultBody["warning"]) end
 		return resultBody
 	end

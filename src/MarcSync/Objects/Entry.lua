@@ -16,7 +16,7 @@ Entry.getValues = function(self:typeof(Entry)):typeof(types.EntryData)
 end
 
 Entry.updateValues = function(self:typeof(Entry), values:typeof(types.EntryData)):number
-	local result = Utils.makeHTTPRequest("entryId", "PUT", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId},["data"]=values}, self._accessToken);
+	local result = Utils.makeHTTPRequest("entry", "PUT", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId},["data"]=values}, self._accessToken);
 	
 	if result["success"] and result["modifiedEntries"] and result["modifiedEntries"] > 0 then
 		for i,v in pairs(values) do
@@ -31,7 +31,7 @@ end
 
 Entry.delete = function(self:typeof(Entry))
 	if typeof(self) ~= "table" then error("Please use : instead of .") end
-	local result = Utils.makeHTTPRequest("entryId", "DELETE", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId}}, self._accessToken);
+	local result = Utils.makeHTTPRequest("entry", "DELETE", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId}}, self._accessToken);
 	
 	if not result["success"] then error(result["errorMessage"]) end
 	self = nil
