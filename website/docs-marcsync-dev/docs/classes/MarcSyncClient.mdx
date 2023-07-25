@@ -1,0 +1,52 @@
+# MarcSyncClient
+
+A class that represents a MarcSync client.
+
+<div style={{display: "grid", "grid-template-columns": "repeat(2,minmax(0,1fr))", "box-sizing": "border-box", "border-width": "0", "border-style": "solid", "word-break": "break-word"}}>
+
+<div style={{"box-sizing": "border-box", "border-width": "0", "border-style": "solid", "word-break": "break-word", "font-weight": "600"}}>
+METHODS
+<ul style={{"padding-left": ".5rem", "list-style-type": "disc", "margin-bottom": "1.25rem", "list-style": "none", "box-sizing": "border-box", "border-width": "0", "border-style": "solid", "word-break": "break-word", "font-weight": "500"}}>
+<li style={{"margin-bottom": ".5rem", "list-style-type": "none"}}>
+<a style={{"display": "block"}} href="#getVersion">getVersion</a>
+<a style={{"display": "block"}} href="#fetchCollection">fetchCollection</a>
+<a style={{"display": "block"}} href="#getCollection">getCollection</a>
+<a style={{"display": "block"}} href="#createCollection">createCollection</a>
+</li>
+</ul>
+</div>
+
+</div>
+
+## METHODS
+
+### :getVersion(`clientId:` [number?](https://www.lua.org/pil/2.3.html))
+Returns the version of the client. If there is no `clientId` specified, it will return the version of the client that is currently running. If there is a `clientId` specified, it will return the version of the client that is running on the specified `clientId`.
+
+| clientId | Corresponding Client |
+|----------|----------|
+| 1   | Roblox Client  |
+| 2   | NodeJS Client   |
+
+### :fetchCollection(`collectionName:` [string](https://www.lua.org/pil/2.4.html))
+Fetches a collection from the MarcSync API and returns it as a [Collection](./Collection) object.
+
+:::caution Exceptions
+
+[InvalidAccessToken](../errors/Authorization#InvalidAccessToken) - Thrown when the `accessToken` is invalid.<br/>
+[CollectionNotFound](../errors/Collection#CollectionNotFound) - Thrown when the collection does not exist.
+
+:::
+
+### :getCollection(`collectionName:` [string](https://www.lua.org/pil/2.4.html))
+Returns a collection from the MarcSync API as a [Collection](./Collection) object. If the collection does not exist, you will get an exception upon trying to use the object.
+
+### :createCollection(`collectionName:` [string](https://www.lua.org/pil/2.4.html))
+Creates a new collection in the MarcSync API and returns it as a [Collection](./Collection) object. If the collection already exists, you will get an exception.
+
+:::caution Exceptions
+
+[InvalidAccessToken](../errors/Authorization#InvalidAccessToken) - Thrown when the `accessToken` is invalid.<br/>
+[CollectionAlreadyExists](../errors/Collection#CollectionAlreadyExists) - Thrown when the collection already exists.
+
+:::

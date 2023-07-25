@@ -1,0 +1,8 @@
+{
+  "label": "MarcSync Exceptions",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "A list of all Exception Classes in the MarcSync library."
+  }
+}
