@@ -23,7 +23,7 @@ Let's install **MarcSync in less than 5 minutes**.
 
 :::danger Danger
 
-Please only use MarcSync in **ONLY SERVER-READABLE PLACES**. This means that you should only use MarcSync in places that are not accessible by players. If you use MarcSync in a place that is accessible by players, they can easily get your token and modify data in your place. If you think your token has been compromised, please generate a new one in the [MarcSync Management Account](https://manage.marcsync.api.marcthedev.it).
+Please only use MarcSync in **ONLY SERVER-READABLE PLACES**. This means that you should only use MarcSync in places that are not accessible by players. If you use MarcSync in a place that is accessible by players, they can easily get your token and modify data in your place. If you think your token has been compromised, please generate a new one in the [MarcSync Management Panel](https://manage.marcsync.api.marcthedev.it).
 
 :::
 
@@ -38,7 +38,7 @@ Please only use MarcSync in **ONLY SERVER-READABLE PLACES**. This means that you
 
 :::caution Warning
 
-Please make sure to **not** share your token with anyone. This token is used to authenticate your place with the MarcSync API and can be used to modify your place. If you think your token has been compromised, please generate a new one in the [MarcSync Management Account](https://manage.marcsync.api.marcthedev.it).
+Please make sure to **not** share your token with anyone. This token is used to authenticate your place with the MarcSync API and can be used to modify your place. If you think your token has been compromised, please generate a new one in the [MarcSync Management Panel](https://manage.marcsync.api.marcthedev.it).
 
 :::
 
@@ -51,7 +51,7 @@ local tokens = {
 }
 ```
 
-- Replace the `AAAAAAAAAA.BBBBBBBBBB.CCCCCCCCCC` with your token from the [MarcSync Management Account](https://manage.marcsync.api.marcthedev.it) and save the file.
+- Replace the `AAAAAAAAAA.BBBBBBBBBB.CCCCCCCCCC` with your token from the [MarcSync Management Panel](https://manage.marcsync.api.marcthedev.it) and save the file.
 - Replace the `exampleToken` with a name for your token. This can be anything you want, but it's recommended to use something that describes the place you're using MarcSync in.
 
 ## Implementing MarcSync
@@ -64,7 +64,7 @@ Please make sure to enable HTTP requests in your game settings. You can do this 
 
 :::danger Danger
 
-Please only use MarcSync in **ONLY SERVER-READABLE PLACES**. This means that you should only use MarcSync in places that are not accessible by players. If you use MarcSync in a place that is accessible by players, they can easily get your token and modify data in your place. If you think your token has been compromised, please generate a new one in the [MarcSync Management Account](https://manage.marcsync.api.marcthedev.it).
+Please only use MarcSync in **ONLY SERVER-READABLE PLACES**. This means that you should only use MarcSync in places that are not accessible by players. If you use MarcSync in a place that is accessible by players, they can easily get your token and modify data in your place. If you think your token has been compromised, please generate a new one in the [MarcSync Management Panel](https://manage.marcsync.api.marcthedev.it).
 
 :::
 
