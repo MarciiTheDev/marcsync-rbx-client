@@ -6,20 +6,20 @@ local types = {
 
 local Entry = {}
 
-Entry.getValue = function(self:typeof(Entry), value:string):any
-	if not value then return nil end
-	return self._entryData[value]
+Entry.getValue = function(self:typeof(Entry), key:string):any
+	if not key then return nil end
+	return self._entryData[key]
 end
 
 Entry.getValues = function(self:typeof(Entry)):typeof(types.EntryData)
 	return self._entryData
 end
 
-Entry.updateValues = function(self:typeof(Entry), values:typeof(types.EntryData)):number
-	local result = Utils.makeHTTPRequest("entry", "PUT", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId},["data"]=values}, self._accessToken);
+Entry.updateValues = function(self:typeof(Entry), data:typeof(types.EntryData)):number
+	local result = Utils.makeHTTPRequest("entry", "PUT", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId},["data"]=data}, self._accessToken);
 	
 	if result["success"] and result["modifiedEntries"] and result["modifiedEntries"] > 0 then
-		for i,v in pairs(values) do
+		for i,v in pairs(data) do
 			self._entryData[i] = v
 		end
 	elseif not result["success"] then
