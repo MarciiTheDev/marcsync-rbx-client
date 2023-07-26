@@ -1,0 +1,76 @@
+# Collection
+
+Collection is a class that represents a collection in the MarcSync API.
+
+<div style={{display: "grid", "grid-template-columns": "repeat(2,minmax(0,1fr))", "box-sizing": "border-box", "border-width": "0", "border-style": "solid", "word-break": "break-word"}}>
+
+<div style={{"box-sizing": "border-box", "border-width": "0", "border-style": "solid", "word-break": "break-word", "font-weight": "600"}}>
+METHODS
+<ul style={{"padding-left": ".5rem", "list-style-type": "disc", "margin-bottom": "1.25rem", "list-style": "none", "box-sizing": "border-box", "border-width": "0", "border-style": "solid", "word-break": "break-word", "font-weight": "500"}}>
+<li style={{"margin-bottom": ".5rem", "list-style-type": "none"}}>
+<a style={{"display": "block"}} href="#createEntry">createEntry</a>
+<a style={{"display": "block"}} href="#updateEntries">updateEntries</a>
+<a style={{"display": "block"}} href="#getEntries">getEntries</a>
+<a style={{"display": "block"}} href="#deleteEntries">deleteEntries</a>
+<a style={{"display": "block"}} href="#drop">drop</a>
+</li>
+</ul>
+</div>
+
+</div>
+
+## METHODS
+
+### :createEntry(`data:` [EntryData](../types/EntryData))
+Creates a new entry in the collection and returns it as an [Entry](./Entry) object.
+
+:::caution Exceptions
+
+[InvalidAccessToken](../errors/Authorization#InvalidAccessToken) - Thrown when the `accessToken` is invalid.<br/>
+[CollectionNotFound](../errors/Collection#CollectionNotFound) - Thrown when the collection does not exist.<br/>
+[InvalidEntryData](../errors/Entry#InvalidEntryData) - Thrown when the [EntryData](../types/EntryData) is invalid.
+
+:::
+
+### :updateEntries(`filters:` [EntryData](../types/EntryData), `data:` [EntryData](../types/EntryData))
+Updates all entries that match the specified filters with the specified data.
+
+:::caution Exceptions
+
+[InvalidAccessToken](../errors/Authorization#InvalidAccessToken) - Thrown when the `accessToken` is invalid.<br/>
+[CollectionNotFound](../errors/Collection#CollectionNotFound) - Thrown when the collection does not exist.<br/>
+[InvalidEntryData](../errors/Entry#InvalidEntryData) - Thrown when the [EntryData](../types/EntryData) is invalid.
+
+:::
+
+### :getEntries(`filters:` [EntryData](../types/EntryData))
+Returns all entries that match the specified filters as an array of [Entry](./Entry) objects.
+
+:::caution Exceptions
+
+[InvalidAccessToken](../errors/Authorization#InvalidAccessToken) - Thrown when the `accessToken` is invalid.<br/>
+[CollectionNotFound](../errors/Collection#CollectionNotFound) - Thrown when the collection does not exist.<br/>
+[InvalidEntryData](../errors/Entry#InvalidEntryData) - Thrown when the [EntryData](../types/EntryData) is invalid.
+
+:::
+
+### :deleteEntries(`filters:` [EntryData](../types/EntryData))
+Deletes all entries that match the specified filters.
+
+:::caution Exceptions
+
+[InvalidAccessToken](../errors/Authorization#InvalidAccessToken) - Thrown when the `accessToken` is invalid.<br/>
+[CollectionNotFound](../errors/Collection#CollectionNotFound) - Thrown when the collection does not exist.<br/>
+[InvalidEntryData](../errors/Entry#InvalidEntryData) - Thrown when the [EntryData](../types/EntryData) is invalid.
+
+:::
+
+### :drop()
+Deletes the collection.
+
+:::caution Exceptions
+
+[InvalidAccessToken](../errors/Authorization#InvalidAccessToken) - Thrown when the `accessToken` is invalid.<br/>
+[CollectionNotFound](../errors/Collection#CollectionNotFound) - Thrown when the collection does not exist.<br/>
+
+:::
