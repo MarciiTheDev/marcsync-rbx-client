@@ -55,7 +55,7 @@ const config = {
         defaultMode: 'dark'
       },
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/MarcSync-Header-V2.png',
       navbar: {
         title: 'Roblox Documentation',
         logo: {
