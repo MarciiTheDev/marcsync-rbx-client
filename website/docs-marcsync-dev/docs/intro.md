@@ -167,7 +167,7 @@ end)()
 
 :::info Note
 
-Please make sure to, if you test out try out that example, to replace `exampleToken` with the name of your token, like we did in the [Configure the Client](#3-configure-the-client) step. As well as either creating the `activities` collection via `ms:createCollection("activities")` or replacing `activities` with an already existing collection.
+Please make sure to, if you try out that example, to replace `exampleToken` with the name of your token, like we did in the [Configure the Client](#3-configure-the-client) step. As well as either creating the `activities` collection via `ms:createCollection("activities")` or replacing `activities` with an already existing collection.
 
 :::
 
