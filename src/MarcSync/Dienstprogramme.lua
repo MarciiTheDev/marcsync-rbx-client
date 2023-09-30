@@ -1,6 +1,6 @@
-local AuthorizationError = require(script.Parent.Errors.Authorization)
-local CollectionError = require(script.Parent.Errors.Collection)
-local EntryError = require(script.Parent.Errors.Entry)
+local AuthorizationError = require(script.Parent.Errors.Autorisierung)
+local CollectionError = require(script.Parent.Errors.Sammlung)
+local EntryError = require(script.Parent.Errors.Eintrag)
 
 local HttpService = game:GetService("HttpService")
 
