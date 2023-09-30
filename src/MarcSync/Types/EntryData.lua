@@ -3,7 +3,7 @@ type EntryData = {
 }
 
 return {
-    getType = function(): EntryData
+    bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar = function(): EntryData
         return {}
     end,
 }
