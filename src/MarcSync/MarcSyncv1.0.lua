@@ -5,7 +5,7 @@ local tokens = {
 
 -- DO NOT EDIT THE FOLLOWING LINES BELOW, UNLESS YOU KNOW WHAT YOU ARE DOING!
 
-local Utils = require(script.Parent.Utils)
+local Utils = require(script.Parent.Dienstprogramme)
 local MarcSyncClient = {}
 
 MarcSyncClient.bekommeVersion = function(self:typeof(MarcSyncClient), clientId: number?):string
@@ -16,31 +16,31 @@ MarcSyncClient.bekommeVersion = function(self:typeof(MarcSyncClient), clientId: 
 	return result["version"]
 end
 
-MarcSyncClient.erzeugeKollektion = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Collection).new())
+MarcSyncClient.erzeugeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).new())
 	if not self._accessToken then error("[MarkSynchronisation] Bitte legen Sie ein Token fest, bevor Sie MarcSync verwenden.") end
 	if not collectionName then error("Kein CollectionName angegeben") end
 	local result = Utils.macheHypertexttransferprotokollAnfrage("collection", "POST", "https://api.marcsync.dev/v0/collection/"..collectionName, {}, self._accessToken);
 
 	if not result["success"] then error(result["errorMessage"]) end
-	result = require(script.Parent.Objects.Collection).neu(collectionName, self._accessToken)
+	result = require(script.Parent.Objects.Sammlung).neu(collectionName, self._accessToken)
 
 	return result
 end
-MarcSyncClient.bringeKollektion = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Collection).new())
+MarcSyncClient.bringeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).new())
 	self:_checkInstallation()
 	if not collectionName then error("Kein CollectionName angegeben") end
 	local result = Utils.macheHypertexttransferprotokollAnfrage("collection", "GET", "https://api.marcsync.dev/v0/collection/"..collectionName, {}, self._accessToken);
 	
 	if not result["success"] then error(result["errorMessage"]) end
-	result = require(script.Parent.Objects.Collection).neu(collectionName, self._accessToken)
+	result = require(script.Parent.Objects.Sammlung).neu(collectionName, self._accessToken)
 
 	return result
 end
-MarcSyncClient.bekommeKollektion = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Collection).new())
+MarcSyncClient.bekommeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).new())
 	if typeof(self) ~= "table" then error("Bitte verwenden Sie : anstelle von .") end
 	self:_checkInstallation()
 	if not collectionName then error("Kein CollectionName angegeben") end
-	return require(script.Parent.Objects.Collection).neu(collectionName, self._accessToken)
+	return require(script.Parent.Objects.Sammlung).neu(collectionName, self._accessToken)
 end
 
 return {
