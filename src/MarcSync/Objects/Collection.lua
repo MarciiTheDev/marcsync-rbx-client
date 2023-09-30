@@ -1,8 +1,8 @@
-local Utils = require(script.Parent.Parent.Utils)
-local Entry = require(script.Parent.Entry)
+local Utils = require(script.Parent.Parent.Dienstprogramme)
+local Entry = require(script.Parent.Eintrag)
 
 local types = {
-	EntryData = require(script.Parent.Parent.Types.EntryData).bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar()
+	EntryData = require(script.Parent.Parent.Types.EintragsDaten).bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar()
 }
 
 local Collection = {}
