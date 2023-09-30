@@ -1,4 +1,4 @@
-local Utils = require(script.Parent.Parent.Utils)
+local Utils = require(script.Parent.Parent.Dienstprogramme)
 
 local types = {
 	EntryData = require(script.Parent.Parent.Types.EntryData).bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar()
