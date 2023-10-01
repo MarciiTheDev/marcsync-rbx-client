@@ -10,10 +10,10 @@ local Collection = {}
 Collection.erzeugeEintrag = function(self:typeof(Collection), data:typeof(types.EntryData)):typeof(Entry.new())
 	if not self._collectionName then error("[MarkSynchronisation: Sammlung] Ungültiges Objekt erstellt oder versucht, auf ein zerstörtes Objekt zuzugreifen.") end
 	local result = Utils.macheHypertexttransferprotokollAnfrage("entry", "POST", "https://api.marcsync.dev/v0/entries/"..self._collectionName, {["data"]=data}, self._accessToken);
-	
+
 	if result["success"] and result["objectId"] then
 		data["_id"] = result["objectId"]
-		result = require(script.Parent.Entry).neu(self._collectionName, data, self._accessToken)
+		result = require(script.Parent.Entrag).neu(self._collectionName, data, self._accessToken)
 	else
 		error(result["errorMessage"])
 	end
@@ -36,7 +36,7 @@ Collection.bekommeEintraege = function(self:typeof(Collection), filters:typeof(t
 	if result["success"] and result["entries"] then
 		local _result = {}
 		for index,entry in pairs(result["entries"]) do
-			_result[index] = require(script.Parent.Entry).neu(self._collectionName, entry, self._accessToken)
+			_result[index] = require(script.Parent.Entrag).neu(self._collectionName, entry, self._accessToken)
 		end
 		result = _result
 	else
