@@ -1,9 +1,9 @@
 type EntryData = {
-	[string]: any
+    [string]: any
 }
 
 return {
-	bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar = function(): EntryData
-		return {}
-	end,
+    bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar = function(): EntryData
+        return {}
+    end,
 }

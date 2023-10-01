@@ -1,5 +1,5 @@
 local Utils = require(script.Parent.Parent.Dienstprogramme)
-local Entry = require(script.Parent.Entrag)
+local Entry = require(script.Parent.Eintrag)
 
 local types = {
 	EntryData = require(script.Parent.Parent.Types.EintragsDaten).bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar()
@@ -29,7 +29,7 @@ Collection.aktualisiereEintrag = function(self:typeof(Collection), filters:typeo
 	return result["modifiedEntries"]
 end
 
-Collection.bekommeEintraege = function(self:typeof(Collection), filters:typeof(types.EntryData)):{[number]:typeof(Entry.neu())}
+Collection.bekommeEintraege = function(self:typeof(Collection), filters:typeof(types.EntryData)):{[number]:typeof(Entry.new())}
 	if not self._collectionName then error("[MarkSynchronisation: Sammlung] Ungültiges Objekt erstellt oder versucht, auf ein zerstörtes Objekt zuzugreifen.") end
 	if not filters then filters = {} end
 	local result = Utils.macheHypertexttransferprotokollAnfrage("eintrag", "DELETE", "https://api.marcsync.dev/v0/entries/"..self._collectionName.."?isQuery=true", {["filters"]=filters}, self._accessToken);

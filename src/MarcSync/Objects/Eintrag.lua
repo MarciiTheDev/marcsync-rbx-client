@@ -1,7 +1,7 @@
 local Utils = require(script.Parent.Parent.Dienstprogramme)
 
 local types = {
-	EntryData = require(script.Parent.Parent.Types.EintragsDaten).bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar()
+	EntryData = require(script.Parent.Parent.Types.EntryData).bekommeRassenindentifikationsspezifizierunginstanztextaufzaehlbar()
 }
 
 local Entry = {}
@@ -17,7 +17,7 @@ end
 
 Entry.aktualisiereWerte = function(self:typeof(Entry), data:typeof(types.EntryData)):number
 	local result = Utils.macheHypertexttransferprotokollAnfrage("eintrag", "PUT", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId},["data"]=data}, self._accessToken);
-
+	
 	if result["success"] and result["modifiedEntries"] and result["modifiedEntries"] > 0 then
 		for i,v in pairs(data) do
 			self._entryData[i] = v
@@ -32,7 +32,7 @@ end
 Entry.loesche = function(self:typeof(Entry))
 	if typeof(self) ~= "table" then error("Bitte verwenden Sie : anstelle von .") end
 	local result = Utils.macheHypertexttransferprotokollAnfrage("eintrag", "DELETE", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId}}, self._accessToken);
-
+	
 	if not result["success"] then error(result["errorMessage"]) end
 	self = nil
 

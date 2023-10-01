@@ -16,7 +16,7 @@ MarcSyncClient.bekommeVersion = function(self:typeof(MarcSyncClient), clientId: 
 	return result["version"]
 end
 
-MarcSyncClient.erzeugeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).neu())
+MarcSyncClient.erzeugeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).new())
 	if not self._accessToken then error("[MarkSynchronisation] Bitte legen Sie ein Token fest, bevor Sie MarcSync verwenden.") end
 	if not collectionName then error("Kein CollectionName angegeben") end
 	local result = Utils.macheHypertexttransferprotokollAnfrage("collection", "POST", "https://api.marcsync.dev/v0/collection/"..collectionName, {}, self._accessToken);
@@ -26,17 +26,17 @@ MarcSyncClient.erzeugeSammlung = function(self:typeof(MarcSyncClient), collectio
 
 	return result
 end
-MarcSyncClient.bringeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).neu())
+MarcSyncClient.bringeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).new())
 	self:_checkInstallation()
 	if not collectionName then error("Kein CollectionName angegeben") end
 	local result = Utils.macheHypertexttransferprotokollAnfrage("collection", "GET", "https://api.marcsync.dev/v0/collection/"..collectionName, {}, self._accessToken);
-
+	
 	if not result["success"] then error(result["errorMessage"]) end
 	result = require(script.Parent.Objects.Sammlung).neu(collectionName, self._accessToken)
 
 	return result
 end
-MarcSyncClient.bekommeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).neu())
+MarcSyncClient.bekommeSammlung = function(self:typeof(MarcSyncClient), collectionName: string):typeof(require(script.Parent.Objects.Sammlung).new())
 	if typeof(self) ~= "table" then error("Bitte verwenden Sie : anstelle von .") end
 	self:_checkInstallation()
 	if not collectionName then error("Kein CollectionName angegeben") end
