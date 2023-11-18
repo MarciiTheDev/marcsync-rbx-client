@@ -1,17 +1,17 @@
-local AuthorizationError = require(script.Parent.Errors.Autorisierung)
-local CollectionError = require(script.Parent.Errors.Sammlung)
-local EntryError = require(script.Parent.Errors.Eintrag)
+local AuthorizationError = require(script.Parent.Errors.Authorization)
+local CollectionError = require(script.Parent.Errors.Collection)
+local EntryError = require(script.Parent.Errors.Entry)
 
 local HttpService = game:GetService("HttpService")
 
-function fehlerMisshandlung(type: string, resultBody: any, resultObject: {})
+function errorHandler(type: string, resultBody: any, resultObject: {})
 	local Error;
 	if typeof(resultBody) == typeof({}) and resultBody["message"] then
 		Error = resultBody["message"]
 	elseif typeof(resultBody) == typeof("") then
 		Error = resultBody
 	else
-		Error = "Es ist ein unerwarteter Fehler aufgetreten."
+		Error = "An Unexpected Error occoured."
 	end
 
 	if type == "collection" then
@@ -37,7 +37,7 @@ end
 
 local utils = {}
 
-function utils.macheHypertexttransferprotokollAnfrage(type: string, method: string, url: string, body: {}, authorization: string):{["success"]: boolean, ["message"]: string}
+function utils.makeHTTPRequest(type: string, method: string, url: string, body: {}, authorization: string):{["success"]: boolean, ["message"]: string}
 	local resultObj;
 	local resultBody;
 	local success = pcall(function()
@@ -51,10 +51,10 @@ function utils.macheHypertexttransferprotokollAnfrage(type: string, method: stri
 		end
 	end)
 	if success and resultBody and resultBody["success"] then
-		if resultBody["warning"] then warn('[MarkSynchronisation Hypertexttransferprotokoll Misshandler] Die MarcSync-HTTP-Anfrage hat eine Warnung zurückgegeben für die URL "'..url..'" mit Koerper: "'..HttpService:JSONEncode(body)..'": '..resultBody["warning"]) end
+		if resultBody["warning"] then warn('[MarcSync HTTPRequest Handler] MarcSync HTTP Request returned warning for URL "'..url..'" with body: "'..HttpService:JSONEncode(body)..'": '..resultBody["warning"]) end
 		return resultBody
 	end
-	return fehlerMisshandlung(type, resultBody, resultObj)
+	return errorHandler(type, resultBody, resultObj)
 end
 
 return utils
