@@ -1,10 +1,6 @@
 type FilterData = {
-	["_startsWith"]: {
-		[string]: any	
-	},
-	["_ignoreCases"]: {
-		[string]: any
-	},
+	["_startsWith"]: {string},
+	["_ignoreCases"]: {string},
 	[string]: any
 }
 
