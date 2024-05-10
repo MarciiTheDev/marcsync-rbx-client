@@ -52,7 +52,7 @@ return {
 		self._checkInstallation = function()
 			if not self then error("Please Setup MarcSync before using MarcSync.") end
 			if not self._accessToken then error("[MarcSync] Please set a Token before using MarcSync.") end
-			if not HttpService.HttpEnabled then error("Please Enable HTTPService in order to use MarcSync.") end
+			if not game:GetService("HttpService").HttpEnabled then error("Please Enable HTTPService in order to use MarcSync.") end
 		end
 
 		self = setmetatable(self, {
