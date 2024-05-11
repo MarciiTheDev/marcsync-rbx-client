@@ -14,7 +14,7 @@ Entry.getValues = function(self:typeof(Entry)):Types.EntryData
 end
 
 Entry.updateValues = function(self:typeof(Entry), data:Types.EntryData):number
-	local result = Utils.makeHTTPRequest("entry", "PUT", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId},["data"]=data}, self._accessToken);
+	local result = Utils.makeHTTPRequest("entry", "PUT", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId},["data"]=data}, self._accessToken, self._options);
 	
 	if result["success"] and result["modifiedEntries"] and result["modifiedEntries"] > 0 then
 		for i,v in pairs(data) do
@@ -29,7 +29,7 @@ end
 
 Entry.delete = function(self:typeof(Entry))
 	if typeof(self) ~= "table" then error("Please use : instead of .") end
-	local result = Utils.makeHTTPRequest("entry", "DELETE", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId}}, self._accessToken);
+	local result = Utils.makeHTTPRequest("entry", "DELETE", "https://api.marcsync.dev/v0/entries/"..self._tableId, {["filters"]={["_id"]=self._objectId}}, self._accessToken, self._options);
 	
 	if not result["success"] then error(result["errorMessage"]) end
 	self = nil
@@ -37,13 +37,14 @@ Entry.delete = function(self:typeof(Entry))
 end
 
 return {
-	new = function(tableId:string, entryData:Types.EntryData, accessToken:string):typeof(Entry)
+	new = function(tableId:string, entryData:Types.EntryData, accessToken:string, options: Types.ClientOptions):typeof(Entry)
 		if not tableId or not entryData or not entryData["_id"] or not accessToken then error("[MarcSync: Entry] Tried creating invalid Entry Object.") end
 		local self = {}
 		self._tableId = tableId
 		self._entryData = entryData
 		self._objectId = entryData["_id"]
 		self._accessToken = accessToken
+		self._options = options
 
 		self = setmetatable(self, {
 			__index = Entry
