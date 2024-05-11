@@ -1,13 +1,11 @@
 local Utils = require(script.Parent.Parent.Utils)
 local Entry = require(script.Parent.Entry)
 
-local types = {
-	EntryData = require(script.Parent.Parent.Types.EntryData).getType()
-}
+local Types = require(script.Parent.Parent.Types)
 
 local Collection = {}
 
-Collection.createEntry = function(self:typeof(Collection), data:typeof(types.EntryData)):typeof(Entry.new())
+Collection.createEntry = function(self:typeof(Collection), data:Types.EntryData):typeof(Entry.new())
 	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
 	local result = Utils.makeHTTPRequest("entry", "POST", "https://api.marcsync.dev/v0/entries/"..self._collectionName, {["data"]=data}, self._accessToken);
 	
@@ -21,7 +19,7 @@ Collection.createEntry = function(self:typeof(Collection), data:typeof(types.Ent
 	return result
 end
 
-Collection.updateEntries = function(self:typeof(Collection), filters:typeof(types.EntryData), data:typeof(types.EntryData)):number
+Collection.updateEntries = function(self:typeof(Collection), filters:Types.EntryData, data:Types.EntryData):number
 	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
 	local result = 	Utils.makeHTTPRequest("entry", "PUT", "https://api.marcsync.dev/v0/entries/"..self._collectionName, {["filters"]=filters,["data"]=data}, self._accessToken);
 	if not result["success"] then error(result["errorMessage"]) end
@@ -29,7 +27,7 @@ Collection.updateEntries = function(self:typeof(Collection), filters:typeof(type
 	return result["modifiedEntries"]
 end
 
-Collection.getEntries = function(self:typeof(Collection), filters:typeof(types.EntryData)):{[number]:typeof(Entry.new())}
+Collection.getEntries = function(self:typeof(Collection), filters:Types.EntryData):{[number]:typeof(Entry.new())}
 	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
 	if not filters then filters = {} end
 	local result = Utils.makeHTTPRequest("entry", "DELETE", "https://api.marcsync.dev/v0/entries/"..self._collectionName.."?isQuery=true", {["filters"]=filters}, self._accessToken);
@@ -46,7 +44,7 @@ Collection.getEntries = function(self:typeof(Collection), filters:typeof(types.E
 	return result
 end
 
-Collection.deleteEntries = function(self:typeof(Collection), filters:typeof(types.EntryData)):number
+Collection.deleteEntries = function(self:typeof(Collection), filters:Types.EntryData):number
 	if not self._collectionName then error("[MarcSync: Collection] Invalid Object created or trying to access an destroied object.") end
 	local result = Utils.makeHTTPRequest("DELETE", "https://api.marcsync.dev/v0/entries/"..self._collectionName, {["filters"]=filters}, self._accessToken);
 	if not result["success"] then error(result["errorMessage"]) end
