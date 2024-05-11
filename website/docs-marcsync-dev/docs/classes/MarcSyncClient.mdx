@@ -18,6 +18,24 @@ METHODS
 
 </div>
 
+## CONSTRUCTOR
+
+### .new(`accessToken:` [string](https://www.lua.org/pil/2.4.html), `options:` [ClientOptions?](../types/ClientOptions))
+Creates a new MarcSync client.
+
+:::info Info
+When creating a new client, you must provide an `accessToken`. This argument can either be the key of the "tokens" table in the client's Class or the actual token itself. If you provide the key, the client will automatically try to fetch the token from the "tokens" table. If you provide the token itself, the client will use that token instead. If no token is found by the key provided, it will use the key as the token itself.
+:::
+
+:::info Info
+The `options` argument is optional and can be used to specify the options of the client. If you do not provide any options, the client will use the default options. The default options are as follows:
+```lua
+{
+    retryCount = 3
+}
+```
+:::
+
 ## METHODS
 
 ### :getVersion(`clientId:` [number?](https://www.lua.org/pil/2.3.html))
